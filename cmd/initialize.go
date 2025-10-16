@@ -17,6 +17,8 @@ var initializeCmd = &cobra.Command{
 	Short: "initialize goon repository",
 	Long:  `Inintializes the goon repository by instantiating .goon directory`,
 	Run: func(cmd *cobra.Command, args []string) {
+
+      
 		fmt.Println("initialize called")
 		// fmt.Println("current working directory:" ,currPath)
 		currPath, _ := os.Getwd()
