@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-
+"github.com/Themaytrix/goon/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -22,7 +22,7 @@ var initializeCmd = &cobra.Command{
 		fmt.Println("initialize called")
 		// fmt.Println("current working directory:" ,currPath)
 		currPath, _ := os.Getwd()
-		found := IsGoonRepo(currPath, ".goon")
+		_,found := utils.IsGoonRepo(currPath, ".goon")
 
 		if found {
 			fmt.Println("This is already a goon repository")
@@ -66,7 +66,7 @@ func CreateDirectories() {
 		".goon/index",
 	}
 	// create the directories and files
-	isgoon := IsGoonRepo(currPath, ".goon")
+	_,isgoon := utils.IsGoonRepo(currPath, ".goon")
 	fmt.Println(isgoon)
 	if !isgoon {
     fmt.Printf("Initializing goon at %s:",rootPath)
@@ -91,21 +91,3 @@ func CreateDirectories() {
 	}
 }
 
-func IsGoonRepo(currDir, targetDir string) bool {
-	// check if .goon already exists in any path of the existing director
-
-	if currDir == "/" {
-		return false
-	}
-
-	targetPath := filepath.Join(currDir, targetDir)
-
-	//  check if this directory exists
-	_, err := os.Stat(targetPath)
-	if err == nil {
-		return true
-	}
-
-	parentDir := filepath.Dir(currDir)
-	return IsGoonRepo(parentDir, targetDir)
-}
