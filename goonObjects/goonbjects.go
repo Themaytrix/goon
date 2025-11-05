@@ -13,7 +13,9 @@ import (
 
 type Blob struct{}
 
-func readObject() {
+func ReadObject(path string) {
+
+
 }
 
 func HashObject(file string) {
