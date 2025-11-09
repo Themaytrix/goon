@@ -4,7 +4,6 @@ Copyright © 2025 NAME HERE <obengraymond81@gmail.com>
 package cmd
 
 import (
-	"fmt"
 	"os"
 "path/filepath"	
 
@@ -35,10 +34,8 @@ to quickly create a Cobra application.`,
        objectdir := printcontext[:2]
       filep := printcontext[2:]
 
-      fullpath := filepath.Join(goondir,objectdir,filep) 
+      fullpath := filepath.Join(goondir,"objects",objectdir,filep) 
       goonobjects.ReadObject(fullpath)
-    }else{
-      fmt.Println("nothing to see here")
     }
 	},
 }

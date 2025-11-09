@@ -18,13 +18,13 @@ var addCmd = &cobra.Command{
 	Short: "Add files to staging area",
 	Long:  `Adds files and folders to the index`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("add called")
+		//fmt.Println("add called")
 
 		if len(args) > 0 {
 
 			for _, arg := range args {
 				entries, _ := os.ReadDir(".")
-				fmt.Println(arg)
+				//fmt.Println(arg)
 
 				for _, entry := range entries {
 					// handle folders
@@ -39,6 +39,7 @@ var addCmd = &cobra.Command{
 					if match == arg {
 						// get entire file path
 
+          fmt.Printf("%s",match)
 						absPath, err := filepath.Abs(base)
 						if err != nil {
 							fmt.Println(err)
