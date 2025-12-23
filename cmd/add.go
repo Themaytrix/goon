@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 
 	"github.com/spf13/cobra"
-"github.com/Themaytrix/goon/goonObjects"
+"github.com/Themaytrix/goon/utils"
 )
 
 // addCmd represents the add command
@@ -21,34 +21,21 @@ var addCmd = &cobra.Command{
 		//fmt.Println("add called")
 
 		if len(args) > 0 {
-
+// create slice for files
+      var files []string
 			for _, arg := range args {
-				entries, _ := os.ReadDir(".")
-				//fmt.Println(arg)
+			// check if its file
+        if utils.IsFile(arg){
+          files = append(files, arg)
+        }else if utils.IsDir(arg){
+          // traverse directory to append the files
+          utils.WalkDir(&files,arg)
+          }
 
-				for _, entry := range entries {
-					// handle folders
-					if entry.IsDir() {
-						continue
-					}
-					// extract the file extention
-					base := entry.Name()
-					ext := filepath.Ext(base)
+        // create new index instance
+        // read existing index file.
+            // loop through files 
 
-					match := base[:len(base)-len(ext)]
-					if match == arg {
-						// get entire file path
-
-          fmt.Printf("%s",match)
-						absPath, err := filepath.Abs(base)
-						if err != nil {
-							fmt.Println(err)
-							return
-						}
-						fmt.Println(absPath)
-            goonobjects.HashObject(absPath)
-					}
-				}
 			}
 		}
 	},
