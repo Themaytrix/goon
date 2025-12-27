@@ -27,8 +27,8 @@ func IsGoonRepo(currDir, targetDir string) (string,bool) {
 	return IsGoonRepo(parentDir, targetDir)
 }
 
-func HashBlob(path string) ([32]byte, error){
-  var blob [32]byte
+func HashBlob(path string) ([20]byte, error){
+  var blob [20]byte
 
   // read the contents in the file
   content, err := os.ReadFile(path)
