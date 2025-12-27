@@ -8,8 +8,10 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/Themaytrix/goon/utils"
 	"github.com/spf13/cobra"
-"github.com/Themaytrix/goon/utils"
+
+	"github.com/Themaytrix/goon/internals/index"
 )
 
 // addCmd represents the add command
@@ -18,25 +20,54 @@ var addCmd = &cobra.Command{
 	Short: "Add files to staging area",
 	Long:  `Adds files and folders to the index`,
 	Run: func(cmd *cobra.Command, args []string) {
-		//fmt.Println("add called")
+		// fmt.Println("add called")
+		currDir, _ := os.Getwd()
+		root, isgoon := utils.IsGoonRepo(currDir, ".goon")
+		if isgoon && len(args) > 0 {
 
-		if len(args) > 0 {
-// create slice for files
-      var files []string
+			// create slice for files
+			var files []string
 			for _, arg := range args {
-			// check if its file
-        if utils.IsFile(arg){
-          files = append(files, arg)
-        }else if utils.IsDir(arg){
-          // traverse directory to append the files
-          utils.WalkDir(&files,arg)
+				// check if its file
+				if utils.IsFile(arg) {
+					files = append(files, arg)
+				} else if utils.IsDir(arg) {
+					// traverse directory to append the files
+					utils.WalkDir(&files, arg)
+				}
+      }
+				// create new index instance
+				idx := index.NewIndex()
+				// find if goon/index exists
+        idxDir := filepath.Join(root, "index")
+				if _, err := os.Stat(idxDir); err == nil {
+					idx, _ = index.ReadIndex(idxDir)
+				}
+				// loop through files
+        for _,path := range files{
+          path = filepath.ToSlash(path)
+
+          // check for deleted files
+          if _,err := os.Stat(path); err != nil{
+            idx.RemovePath(path)
+            continue
           }
 
-        // create new index instance
-        // read existing index file.
-            // loop through files 
+          // create new entry
+          entry, err := index.NewIndexEntry(path)
 
-			}
+          if err != nil {
+            panic(err)
+          }
+
+          // replace alreading existing entry
+          idx.RemovePath(path)
+          idx.AddEntry(entry)
+        }
+
+      // write to the index file
+      idx.WriteIndex(idxDir)
+
 		}
 	},
 }
