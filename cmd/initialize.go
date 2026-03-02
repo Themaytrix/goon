@@ -63,7 +63,6 @@ func CreateDirectories() {
 		".goon/HEAD",
 		".goon/config",
 		".goon/description",
-		".goon/index",
 	}
 	// create the directories and files
 	_,isgoon := utils.IsGoonRepo(currPath, ".goon")

@@ -4,12 +4,11 @@ import (
 	"bytes"
 	"crypto/sha1"
 	"encoding/binary"
-	"fmt"
 	"io"
 	"os"
 	"path/filepath"
 	"sort"
-
+"errors"
 	"github.com/Themaytrix/goon/utils"
 )
 
@@ -167,7 +166,6 @@ func ReadIndex(path string) (*Index, error) {
 	if _, err := io.ReadFull(r, idx.Signature[:]); err != nil {
 		return nil, err
 	}
-
 	if string(idx.Signature[:]) != "DIRC" {
 		return nil, errors.New("invalid signature")
 	}

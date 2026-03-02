@@ -35,39 +35,42 @@ var addCmd = &cobra.Command{
 					// traverse directory to append the files
 					utils.WalkDir(&files, arg)
 				}
-      }
-				// create new index instance
-				idx := index.NewIndex()
-				// find if goon/index exists
-        idxDir := filepath.Join(root, "index")
-				if _, err := os.Stat(idxDir); err == nil {
-					idx, _ = index.ReadIndex(idxDir)
+			}
+			fmt.Printf("files %v", files)
+			// create new index instance
+			idx := index.NewIndex()
+			// find if goon/index exists
+			idxDir := filepath.Join(root, "index")
+			fmt.Print(idxDir)
+			if _, err := os.Stat(idxDir); err == nil {
+				idx, _ = index.ReadIndex(idxDir)
+			}
+			// loop through files
+			for _, path := range files {
+				path = filepath.ToSlash(path)
+
+				// check for deleted files
+				if _, err := os.Stat(path); err != nil {
+					idx.RemovePath(path)
+					continue
 				}
-				// loop through files
-        for _,path := range files{
-          path = filepath.ToSlash(path)
 
-          // check for deleted files
-          if _,err := os.Stat(path); err != nil{
-            idx.RemovePath(path)
-            continue
-          }
+				// create new entry
+				entry, err := index.NewIndexEntry(path)
+				if err != nil {
+					panic(err)
+				}
 
-          // create new entry
-          entry, err := index.NewIndexEntry(path)
+				// replace alreading existing entry
+				idx.RemovePath(path)
+				idx.AddEntry(entry)
+			}
 
-          if err != nil {
-            panic(err)
-          }
+			// write to the index file
+			idx.WriteIndex(idxDir)
 
-          // replace alreading existing entry
-          idx.RemovePath(path)
-          idx.AddEntry(entry)
-        }
-
-      // write to the index file
-      idx.WriteIndex(idxDir)
-
+		} else {
+			fmt.Print("Not a goon repo")
 		}
 	},
 }
