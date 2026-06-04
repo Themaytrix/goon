@@ -3,7 +3,7 @@ package goonobjects
 import (
 	"bytes"
 	"compress/zlib"
-	"crypto/sha256"
+	"crypto/sha1"
 	"fmt"
 	"io"
 	"os"
@@ -50,7 +50,7 @@ func HashObject(file string) {
 	//store := fmt.Appendf(nil,"%s %d\x00%s","blob",len(content),content)
   store := append([]byte(header), content...)
 	// hash contents
-	hash := sha256.Sum256(store)
+	hash := sha1.Sum(store)
 
 	// find goon directory and add retun relative .goon dir
 	currDir, _ := os.Getwd()

@@ -2,10 +2,14 @@ package tree
 
 import (
 	"bytes"
+	"crypto/sha1"
 	"fmt"
+	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/Themaytrix/goon/internals/index"
+	"github.com/Themaytrix/goon/utils"
 )
 
 type TreeEntry struct {
@@ -110,6 +114,25 @@ var b bytes.Buffer
 }
 
 
-func WriteObject(objType string, data []byte)([20]byte,error){
+func WriteObject(objType string, contents []byte)([20]byte,error){
+
+  // create object header
+  header := fmt.Sprintf("%s %d\x00",objType,len(contents))
+
+  store := append([]byte(header), contents...)
+
+  // hash contents
+  hash := sha1.Sum(store)
+
+  // get our .goon directory and relative path to .goon
+  currDir, _ := os.Getwd()
+  goonPath, _ := utils.IsGoonRepo(currDir,".goon")
+ 
+  hash_str := fmt.Sprintf("%x",hash)
+  //get obj_dir
+  obj_dir := filepath.Join(goonPath,"objects",hash_str[:2])
+  file := filepath.Join(obj_dir, hash_str[2:])
+
+  // create object directory
 
 }

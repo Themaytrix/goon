@@ -68,7 +68,7 @@ func NewIndexEntry(path string) (IndexEntry, error) {
 	}
 
 	// handling flags
-	flags := uint16(len(path))
+	flags := uint16(len(path)) & 0x0FFF
 
 	if flags > 0x0FFF {
 		flags = 0x0FFF
@@ -81,7 +81,7 @@ func NewIndexEntry(path string) (IndexEntry, error) {
 		MTimeNSec: mNSec,
 		Dev:       dev,
 		Ino:       ino,
-		Mode:      uint32(0o100644),
+		Mode:      uint32(info.Mode()),
 		UID:       uid,
 		GID:       gid,
 		FileSize:  uint32(info.Size()),

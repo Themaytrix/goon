@@ -84,7 +84,7 @@ func WalkDir(files *[]string, root string) error {
     }
 
     // check if it's directory and not .goon or .git
-    if d.IsDir() && d.Name() == ".git" && d.Name() == ".goon"{
+    if d.IsDir() && d.Name() == ".git" || d.Name() == ".goon"{
       return filepath.SkipDir
     }
 
